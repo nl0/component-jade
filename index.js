@@ -1,4 +1,4 @@
-var debug = require('debug')('component-jade')
+var debug = require('debug')('component:jade')
   , fs = require('fs')
   , jade = require('jade')
   , path = require('path')
