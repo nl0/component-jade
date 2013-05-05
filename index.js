@@ -7,7 +7,7 @@ var debug = require('debug')('component-jade')
 module.exports = function(builder) {
   builder.hook('before scripts', function(pkg, callback) {
     (pkg.config.templates || []).forEach(function(file) {
-      if (path.extname(file) === '.jade') return
+      if (path.extname(file) !== '.jade') return
 
       debug('compiling: %s', file)
 
