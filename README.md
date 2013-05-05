@@ -8,10 +8,14 @@
 
 ## Usage
   
-  Add your `.jade` files to the `templates` array in your `component.json`:
+  Add your `.jade` files to the `templates` array in your `component.json`
+  and  `visionmedia/jade` to dependencies (for the jade runtime):
 
   ```js
   {
+    "dependencies": {
+      "visionmedia/jade": "3.0"
+    },
     "templates": [
       "template.jade"
     ]

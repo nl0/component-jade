@@ -1,58 +1,26 @@
-var fs     = require('fs')
-  , jade   = require('jade')
-  , path   = require('path')
-  , debug  = require('debug')('component-jade');
+var debug = require('debug')('component-jade')
+  , fs = require('fs')
+  , jade = require('jade')
+  , path = require('path')
 
 
+module.exports = function(builder) {
+  builder.hook('before scripts', function(pkg, callback) {
+    (pkg.config.templates || []).forEach(function(file) {
+      if (path.extname(file) === '.jade') return
 
-/**
- * Replace Jade files with compiled Javascript files.
- */
+      debug('compiling: %s', file)
 
-module.exports = function (builder) {
-  // Add the runtime.js to our top-level package's `scripts` array.
-  debug('adding jade-runtime.js to %s', builder.basename);
+      var src = fs.readFileSync(pkg.path(file), 'utf8')
+        , compiled = jade.compile(src, {client: true, compileDebug: false})
+        , runtimeRequire = 'var jade = require("jade");\n'
+        , contents = runtimeRequire + 'module.exports = ' + compiled
+        , jsFile = file.replace(/\.jade$/, '.js')
 
-  // Add our runtime to the builder, and add a require call for our runtime,
-  // so it's global for all future template functions.
-  var runtime = fs.readFileSync(__dirname + '/runtime.js', 'utf8');
-  builder.addFile('scripts', 'jade-runtime.js', runtime);
-  builder.append('require("' + builder.basename + '/jade-runtime");\n');
+      pkg.addFile('scripts', jsFile, contents)
+      pkg.removeFile('scripts', file)
+    })
 
-  // Before processing any scripts, convert `.jade` files to Javascript.
-  builder.hook('before scripts', compileJade);
-};
-
-
-/**
- * Compile jade.
- */
-
-function compileJade (pkg, callback) {
-  // Grab our Jade templates.
-  if (!pkg.config.templates) return callback();
-  var files = pkg.config.templates.filter(filterJade);
-
-  files.forEach(function (file) {
-    debug('compiling: %s', file);
-
-    // Read and compile our Jade.
-    var string = fs.readFileSync(pkg.path(file), 'utf8')
-      , fn     = jade.compile(string, { client: true, compileDebug: false });
-
-    // Add our new compiled version to the package, with the same name.
-    file = path.basename(file, path.extname(file)) + '.js';
-    pkg.addFile('scripts', file, 'module.exports = ' + fn);
-  });
-
-  callback();
-}
-
-
-/**
- * Filter for .jade files.
- */
-
-function filterJade (filename) {
-  if (path.extname(filename) === '.jade') return true;
+    callback()
+  })
 }
