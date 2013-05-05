@@ -1,6 +1,6 @@
 {
   "name": "component-jade",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A plugin to transpile Jade files for the component builder.",
   "keywords": [
     "component",
@@ -10,11 +10,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/segmentio/component-jade.git"
+    "url": "git://github.com/nl0/component-jade.git"
   },
   "dependencies": {
-    "debug": "0.7.2",
-    "jade": "0.28.1"
+    "debug": "0.7",
+    "jade": "0.30"
   },
   "devDependencies" : {
     "component-builder" : "~0.7.0"
