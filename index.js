@@ -6,10 +6,10 @@ var debug = require('debug')('component:jade')
 
 module.exports = function(builder) {
   builder.hook('before scripts', function(pkg, callback) {
-    (pkg.config.templates || []).forEach(function(file) {
+    ;(pkg.config.templates || []).slice().forEach(function(file) {
       if (path.extname(file) !== '.jade') return
 
-      debug('compiling: %s', file)
+      debug('compiling "%s"', file)
 
       var src = fs.readFileSync(pkg.path(file), 'utf8')
         , compiled = jade.compile(src, {client: true, compileDebug: false})
@@ -19,6 +19,7 @@ module.exports = function(builder) {
 
       pkg.addFile('scripts', jsFile, contents)
       pkg.removeFile('scripts', file)
+      debug('compiled "%s" -> "%s"', file, jsFile)
     })
 
     callback()
