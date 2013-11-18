@@ -11,8 +11,13 @@ module.exports = function(builder) {
 
       debug('compiling "%s"', file)
 
-      var src = fs.readFileSync(pkg.path(file), 'utf8')
-        , compiled = jade.compile(src, {client: true, compileDebug: false})
+      var fullName = pkg.path(file)
+        , src = fs.readFileSync(fullName, 'utf8')
+        , compiled = jade.compile(src,
+          { client: true
+          , compileDebug: false
+          , filename: fullName
+          })
         , runtimeRequire = 'var jade = require("jade");\n'
         , contents = runtimeRequire + 'module.exports = ' + compiled
         , jsFile = file.replace(/\.jade$/, '.js')
