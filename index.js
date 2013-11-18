@@ -23,7 +23,7 @@ module.exports = function(builder) {
         , jsFile = file.replace(/\.jade$/, '.js')
 
       pkg.addFile('scripts', jsFile, contents)
-      pkg.removeFile('scripts', file)
+      pkg.removeFile('templates', file)
       debug('compiled "%s" -> "%s"', file, jsFile)
     })
 
