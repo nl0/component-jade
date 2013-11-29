@@ -5,8 +5,8 @@ var debug = require('debug')('component:jade')
 
 
 module.exports = function(builder) {
-  builder.hook('before templates', function(pkg, callback) {
-    ;(pkg.config.templates || []).slice().forEach(function(file) {
+  builder.hook('before scripts', function(pkg, callback) {
+    ;(pkg.config.scripts || []).slice().forEach(function(file) {
       if (path.extname(file) !== '.jade') return
 
       debug('compiling "%s"', file)
@@ -23,7 +23,7 @@ module.exports = function(builder) {
         , jsFile = file.replace(/\.jade$/, '.js')
 
       pkg.addFile('scripts', jsFile, contents)
-      pkg.removeFile('templates', file)
+      pkg.removeFile('scripts', file)
       debug('compiled "%s" -> "%s"', file, jsFile)
     })
 
